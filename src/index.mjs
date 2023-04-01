@@ -12,11 +12,41 @@ import mongoose from "mongoose";
 import {hash, compare} from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-// const client = new MongoClient('mongodb+srv://cyberZup:Pass0011Aa@todo.zeqogjy.mongodb.net/?retryWrites=true&w=majority');
-await client.connect();
 
-const db = client.db('mydb');
-const users = db.collection('users');
+mongoose.connect('mongodb+srv://cyberZup:Pass0011Aa@todo.zeqogjy.mongodb.net/todo?retryWrites=true&w=majority', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+}).then(() => console.log('Connected to mongoDB!'));
+
+const UserSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: [true, 'Username is required'],
+        unique: true,
+        minlength: [4, 'Username must be at least 4 characters long'],
+        maxlength: [20, 'Username must be at max 20 characters long'],
+    },
+    email: { type: String,
+        required: [true, 'Email is required'],
+        unique: true,
+        lowercase: true,
+        match: [
+            /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+            'Invalid email format',
+        ],
+    },
+    password: {
+        type: String,
+        required: [true, 'Password is required'],
+        minlength: [8, 'Password must be at least 8 characters long'],
+        match: [
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
+            'Password must contain at least one lowercase letter, one uppercase letter and one number',
+        ],
+    }});
+
+const UserModel = mongoose.model('User', UserSchema);
+
 
 const server = fastify();
 
@@ -31,28 +61,29 @@ server.register(fastifySwaggerUi, { swaggerUrl: '/documentation/json' });
 server.post('/register', async (req, res) => {
 
     const { name, email, password } = req.body;
-    const existingEmail = await users.findOne({ email });
-    const existingName = await users.findOne({ name });
+
     const passwordHash = await hash(password, 10);
     const token = jwt.sign({ email }, 'secret', { expiresIn: '1h' });
-
-    if (existingEmail) {
-       return res.code(409).send({ message: 'This email already exists' });
-    } else if (existingName) {
-        return res.code(409).send({ message: 'This name already exists' });
-    } else {
-        await users.insertOne({ name, email, password: passwordHash })
-        return res.send({ success: true, message: 'User registered' })
-                .setCookie('token', token, { httpOnly: true })
+    const existingEmail = await UserModel.findOne({ email });
+    const existingName = await UserModel.findOne({ name });
+    if (existingName) {
+        res.status(400).send({ error: 'Username already exists' });
+        return;
+    } else if (existingEmail) {
+        res.status(400).send({ error: 'Email already exists' });
+        return;
     }
-
+    const newUser = new UserModel({ name, email, password: passwordHash });
+    await newUser.save();
+    res.send({ success: 'User registered successfully' })
+        .setCookie('token', token, { httpOnly: true });
 });
 
 server.post('/login', async (req, res) => {
 
     const { email, password } = req.body;
 
-    const user = await users.findOne({ email });
+    const user = await UserModel.findOne({ email });
 
     if(user) {
         const isPasswordCorrect = await compare(password, user.password);
