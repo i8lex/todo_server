@@ -37,9 +37,9 @@ server.register(
 
         instance.post(Routes.register, registerHandler);
         instance.post(Routes.login, loginHandler);
-        // instance.post(...registerConfig);
-        instance.post('/image', imageHandler);
 
+        instance.post('/image', imageHandler);
+        // instance.post(...registerConfig);
         // instance.post(...loginConfig);
 
         done();

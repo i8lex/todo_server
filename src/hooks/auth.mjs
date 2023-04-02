@@ -12,7 +12,7 @@ export async function auth(request, reply) {
     const { token } = request.headers;
     try {
         const payload = await verify(token, SECRET_WORD);
-        console.log(payload)
+
         request.payload = payload;
     } catch (err) {
         reply.status(401)
