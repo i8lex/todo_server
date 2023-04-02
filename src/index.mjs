@@ -6,13 +6,12 @@ import fastifyCsrf from '@fastify/csrf-protection';
 import fastifyFormBody from '@fastify/formbody';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
-// import { MongoClient } from 'mongodb';
 import mongoose from "mongoose";
-import {hash, compare} from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import { registerConfig, User, UserSchema, registerHandler } from './handlers/register.mjs'
-import {auth} from "./hooks/auth.mjs";
-import {ROUTE_PREFIX} from "./constants/routes.mjs";
+import { registerHandler } from './handlers/register.mjs'
+import { auth } from "./hooks/auth.mjs";
+import { ROUTE_PREFIX, Routes } from "./constants/routes.mjs";
+import { loginHandler } from "./handlers/login.mjs";
+import {imageHandler} from "./handlers/image.mjs";
 
 
 mongoose.connect('mongodb+srv://cyberZup:Pass0011Aa@todo.zeqogjy.mongodb.net/todo?retryWrites=true&w=majority', {
@@ -73,9 +72,12 @@ server.register(
     (instance, opts, done) => {
         instance.addHook('preHandler', auth);
 
-        // instance.post('/register', registerHandler);
+        instance.post(Routes.register, registerHandler);
+        instance.post(Routes.login, loginHandler);
+        // instance.post(...registerConfig);
+        instance.post('/image', imageHandler);
 
-        instance.post(...registerConfig);
+        // instance.post(...loginConfig);
 
         done();
     },
@@ -108,22 +110,22 @@ server.register(
 
 
 
-server.post('/login', async (req, res) => {
-
-    const { email, password } = req.body;
-
-    const user = await User.findOne({ email });
-
-    if(user) {
-        const isPasswordCorrect = await compare(password, user.password);
-        if(isPasswordCorrect) {
-            const token = jwt.sign({ email }, 'secret', { expiresIn: '1h' });
-            return res.send({ message: `Welcome ${user.name}`, token})
-                .setCookie('token', token, { httpOnly: true });
-    }}
-    return res.send({ message: 'Wrong email or password' });
-
-});
+// server.post('/login', async (req, res) => {
+//
+//     const { email, password } = req.body;
+//
+//     const user = await User.findOne({ email });
+//
+//     if(user) {
+//         const isPasswordCorrect = await compare(password, user.password);
+//         if(isPasswordCorrect) {
+//             const token = jwt.sign({ email }, 'secret', { expiresIn: '1h' });
+//             return res.send({ message: `Welcome ${user.name}`, token})
+//                 .setCookie('token', token, { httpOnly: true });
+//     }}
+//     return res.send({ message: 'Wrong email or password' });
+//
+// });
 
 server.listen({
     port: 3001,
