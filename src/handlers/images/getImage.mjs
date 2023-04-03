@@ -17,8 +17,13 @@ export const getImageHandler = async (request, reply) => {
             return reply.code(404).send({ message: 'Image not found' });
         }
 
-        const data = fs.readFileSync(image.path);
-        reply.type(image.mimetype).send(data);
+        // const data = fs.readFileSync(image.path); //
+        // console.log(data)                         // upload from server
+        // reply.type(image.mimetype).send(data);    //
+
+        const { data, mimetype } = image.file;
+        reply.header('Content-Type', mimetype);
+        reply.send(Buffer.from(data.buffer));
 
     } catch (err) {
         console.log(err)
