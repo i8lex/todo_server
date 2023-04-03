@@ -3,8 +3,8 @@ import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
 import path from 'path';
 import mongoose from "mongoose";
-import { SECRET_WORD } from "../config/index.mjs";
-import { User } from "./register.mjs";
+import { SECRET_WORD } from "../../config/index.mjs";
+import { User } from "../register.mjs";
 
 const imageSchema = new mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
@@ -16,7 +16,7 @@ const imageSchema = new mongoose.Schema({
     created_at: { type: Date, default: Date.now }
 });
 
-let Image;
+export let Image;
 try {
     Image = mongoose.model('Image');
 } catch (error) {
@@ -38,8 +38,6 @@ export const imageHandler = async (request, reply) => {
     if (!fs.existsSync(userFolder)) {
         fs.mkdirSync(userFolder, { recursive: true });
     }
-
-
 
     files.map(( file ) => {
         const mimetype = file.mimetype.replace(/^.+\//, '.');

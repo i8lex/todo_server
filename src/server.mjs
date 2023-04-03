@@ -6,11 +6,18 @@ import fastifyCsrf from '@fastify/csrf-protection';
 import fastifyFormBody from '@fastify/formbody';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
-import { registerHandler } from './handlers/register.mjs'
 import { auth } from "./hooks/auth.mjs";
 import { ROUTE_PREFIX, Routes } from "./constants/routes.mjs";
+import { registerHandler } from './handlers/register.mjs'
 import { loginHandler } from "./handlers/login.mjs";
-import {imageHandler} from "./handlers/image.mjs";
+import { imageHandler } from "./handlers/images/createImage.mjs";
+import { getImageHandler } from "./handlers/images/getImage.mjs";
+import { deleteImageHandler } from "./handlers/images/deleteImages.mjs";
+import { taskHandler } from "./handlers/task/task.mjs";
+import { getTaskHandler } from "./handlers/task/getTask.mjs";
+import { updateTaskHandler } from "./handlers/task/updateTask.mjs";
+import { deleteTaskHandler } from "./handlers/task/deleteTask.mjs";
+
 
 const server = fastify({
     logger: true,
@@ -41,7 +48,14 @@ server.register(
         instance.post(Routes.register, registerHandler);
         instance.post(Routes.login, loginHandler);
 
-        instance.post('/image', imageHandler);
+        instance.post(Routes.image, imageHandler);
+        instance.get(Routes.image, getImageHandler);
+        instance.delete(Routes.image, deleteImageHandler);
+        instance.post(Routes.task, taskHandler);
+        instance.get(Routes.task, getTaskHandler);
+        instance.put(Routes.task, updateTaskHandler);
+        instance.delete(Routes.task, deleteTaskHandler);
+
         // instance.post(...registerConfig);
         // instance.post(...loginConfig);
 

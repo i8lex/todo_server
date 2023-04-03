@@ -3,7 +3,8 @@ export const ROUTE_PREFIX = '/api';
 export const Routes = {
     login: '/login',
     register: '/register',
-    image: '/image'
+    image: '/image/:id',
+    task: '/tasks/:id',
 };
 
 export const NotProtectedRoutes = {
