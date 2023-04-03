@@ -24,6 +24,9 @@ const server = fastify({
 server.register(fastifyCors);
 server.register(fastifyMultipart, {
     addToBody: true,
+    attachFieldsToBody: true,
+    limits: { fileSize: 4 * 1024 * 1024 },
+    uploadDir: '/tmp',
 });
 server.register(fastifyCookie);
 server.register(fastifyCsrf);

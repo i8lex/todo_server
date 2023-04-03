@@ -20,9 +20,9 @@ export const loginHandler = async (request, reply) => {
         if(isPasswordCorrect) {
             console.log(sign)
             const token = await sign({ email: user.email, id: user.id }, SECRET_WORD, {
-                expiresIn: '1h',
+                expiresIn: '24h',
             });
-            return reply.send({ message: `Welcome ${user.name}`, token})
+            return reply.send({ id: user.id, message: `Welcome ${user.name}`, token})
                 .setCookie('token', token, { httpOnly: true });
         }}
     return reply.send({ message: 'Wrong email or password' });

@@ -27,7 +27,9 @@ const UserSchema = new mongoose.Schema({
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
             'Password must contain at least one lowercase letter, one uppercase letter and one number',
         ],
-    }});
+    },
+    created: {  type: Date, default: Date.now },
+});
 
 export const User = mongoose.model('User', UserSchema);
 
