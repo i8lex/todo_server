@@ -1,5 +1,6 @@
 import { hash } from 'bcrypt';
 import mongoose from 'mongoose';
+import nodemailer from 'nodemailer'
 
 const UserSchema = new mongoose.Schema({
     name: {
@@ -27,6 +28,15 @@ const UserSchema = new mongoose.Schema({
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
             'Password must contain at least one lowercase letter, one uppercase letter and one number',
         ],
+    },
+    confirmationCode: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    isconfirmed: {
+        type: Boolean,
+        default: false,
     },
     created: {  type: Date, default: Date.now },
 });
@@ -61,12 +71,28 @@ export const registerHandler = async (request, reply) => {
             field: 'password',
         });
     }
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'authtodomail@gmail.com',
+            pass: 'Pass0011Aa',
+        },
+    });
+    const confirmationCode = Math.floor(Math.random() * 1000000);
+
+    await transporter.sendMail({
+        from: 'authtodomail@gmail.com',
+        to: email,
+        subject: 'Todo confirmation code',
+        text: `Your confirmation code is ${confirmationCode}`,
+    });
 
     const hashedPassword = await hash(password, 10);
     const newUser = new User({
         name,
         email,
         password: hashedPassword,
+        confirmationCode,
     });
     await newUser.save();
     return reply.status(201).send({ message: 'User successful created' });
