@@ -1,6 +1,14 @@
 import { hash } from 'bcrypt';
+import * as dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import nodemailer from 'nodemailer'
+import Handlebars from 'handlebars';
+import * as jwt from 'jsonwebtoken';
+// import { SECRET_WORD } from "../../config/index.mjs";
+
+dotenv.config();
+
+const { sign } = jwt.default;
 
 const UserSchema = new mongoose.Schema({
     name: {
@@ -71,30 +79,54 @@ export const registerHandler = async (request, reply) => {
             field: 'password',
         });
     }
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: 'authtodomail@gmail.com',
-            pass: 'Pass0011Aa',
-        },
-    });
-    const confirmationCode = Math.floor(Math.random() * 1000000);
-
-    await transporter.sendMail({
-        from: 'authtodomail@gmail.com',
-        to: email,
-        subject: 'Todo confirmation code',
-        text: `Your confirmation code is ${confirmationCode}`,
-    });
 
     const hashedPassword = await hash(password, 10);
+    const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false,
+        auth: {
+            user: 'authtodomail@gmail.com',
+            pass: process.env.GOOGLE_CONNECT
+        }
+    });
+
+    const token = await sign({ email }, process.env.SECRET_WORD, {
+        expiresIn: '15m',
+    });
+
+    const source = `<a href="{{url}}">Click to confirm</a>`;
+    const template = Handlebars.compile(source);
+
+    try {
+        // Заполняем шаблон данными
+        const data = { url: `http://localhost:3001/api/email/?confirm=${token}` };
+        const html = template(data);
+
+        // Отправляем письмо
+        await transporter.sendMail({
+            from: 'noreply-authtodomail@gmail.com',
+            to: email,
+            subject: 'Todo registration',
+            html: html // Используем скомпилированный HTML-код
+        });
+
+    } catch (err) {
+        reply.send({ error: err.message });
+    }
+
     const newUser = new User({
         name,
         email,
         password: hashedPassword,
-        confirmationCode,
+        confirmationCode: token,
     });
-    await newUser.save();
+
+
+
+
+
+await newUser.save();
     return reply.status(201).send({ message: 'User successful created' });
 
 };

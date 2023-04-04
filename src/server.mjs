@@ -8,8 +8,10 @@ import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
 import { auth } from "./hooks/auth.mjs";
 import { ROUTE_PREFIX, Routes } from "./constants/routes.mjs";
-import { registerHandler } from './handlers/register.mjs'
-import { loginHandler } from "./handlers/login.mjs";
+import { registerHandler } from './handlers/auth/register.mjs'
+import { confirmEmailHandler } from './handlers/auth/confirm.mjs'
+
+import { loginHandler } from "./handlers/auth/login.mjs";
 import { imageHandler } from "./handlers/images/createImage.mjs";
 import { getImageHandler } from "./handlers/images/getImage.mjs";
 import { deleteImageHandler } from "./handlers/images/deleteImages.mjs";
@@ -47,6 +49,7 @@ server.register(
 
         instance.post(Routes.register, registerHandler);
         instance.post(Routes.login, loginHandler);
+        instance.get(Routes.email, confirmEmailHandler);
 
         instance.post(Routes.image, imageHandler);
         instance.get(Routes.image, getImageHandler);

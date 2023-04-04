@@ -1,6 +1,9 @@
+import * as dotenv from 'dotenv';
 import * as jwt from 'jsonwebtoken';
-import {SECRET_WORD} from "../../config/index.mjs";
+// import {SECRET_WORD} from "../../config/index.mjs";
 import { Task } from "./task.mjs"
+
+dotenv.config();
 
 const { verify } = jwt.default;
 
@@ -12,7 +15,7 @@ const { verify } = jwt.default;
  */
 export const updateTaskHandler = async (request, reply) => {
     const { token } = request.headers;
-    const { id } = await verify(token, SECRET_WORD);
+    const { id } = await verify(token, process.env.SECRET_WORD);
     console.log(id)
     const { id: tokenId } = request.params;
     const updates = request.body;
@@ -21,7 +24,7 @@ export const updateTaskHandler = async (request, reply) => {
         const updatedTask = await Task.updateOne({ _id: tokenId, user: id }, { $set:updates });
 
         if (updatedTask.nModified === 0) {
-            return reply.status(404).send('Product not found');
+            return reply.status(404).send('Task not found');
         }
 
         reply.send(updatedTask);

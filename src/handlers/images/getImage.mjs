@@ -1,12 +1,16 @@
+import * as dotenv from 'dotenv';
 import * as jwt from 'jsonwebtoken';
 import fs from 'fs';
-import {SECRET_WORD} from "../../config/index.mjs";
+// import {SECRET_WORD} from "../../config/index.mjs";
 import { Image } from "./createImage.mjs"
+
+dotenv.config();
+
 const { verify } = jwt.default;
 
 export const getImageHandler = async (request, reply) => {
     const { token } = request.headers;
-    const { id } = await verify(token, SECRET_WORD);
+    const { id } = await verify(token, process.env.SECRET_WORD);
     const { id: imageId } = request.params;
     console.log(imageId)
     try {

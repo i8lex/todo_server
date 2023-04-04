@@ -1,6 +1,9 @@
+import * as dotenv from 'dotenv';
 import * as jwt from 'jsonwebtoken';
 import {SECRET_WORD} from "../../config/index.mjs";
 import { Image } from "./createImage.mjs"
+
+dotenv.config();
 
 const { verify } = jwt.default;
 
@@ -12,7 +15,7 @@ const { verify } = jwt.default;
  */
 export const deleteImageHandler = async (request, reply) => {
     const { token } = request.headers;
-    const { userId } = await verify(token, SECRET_WORD);
+    const { userId } = await verify(token, process.env.SECRET_WORD);
     const { ids } = request.query;
     console.log(ids)
 

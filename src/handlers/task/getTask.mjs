@@ -1,6 +1,9 @@
+import * as dotenv from 'dotenv';
 import * as jwt from 'jsonwebtoken';
-import {SECRET_WORD} from "../../config/index.mjs";
+// import {SECRET_WORD} from "../../config/index.mjs";
 import { Task } from "./task.mjs"
+
+dotenv.config();
 
 const { verify } = jwt.default;
 
@@ -11,7 +14,7 @@ const { verify } = jwt.default;
  */
 export const getTaskHandler = async (request, reply) => {
     const { token } = request.headers;
-    const { id } = await verify(token, SECRET_WORD);
+    const { id } = await verify(token, process.env.SECRET_WORD);
     const { query } = request;
     console.log(!Object.keys(query))
 

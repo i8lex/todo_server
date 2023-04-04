@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
+import * as dotenv from 'dotenv';
 
-const uri = 'mongodb+srv://cyberZup:Pass0011Aa@todo.zeqogjy.mongodb.net/todo?retryWrites=true&w=majority';
+dotenv.config();
+
+const uri = process.env.MONGO_CONNECT;
 
 mongoose.connect(uri, {
     useNewUrlParser: true,

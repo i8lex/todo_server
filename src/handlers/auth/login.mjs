@@ -1,7 +1,10 @@
 import { compare } from 'bcrypt';
+import * as dotenv from 'dotenv';
 import * as jwt from 'jsonwebtoken';
 import { User } from "./register.mjs";
-import { SECRET_WORD } from "../config/index.mjs";
+// import { SECRET_WORD } from "../../config/index.mjs";
+
+dotenv.config();
 
 const { sign } = jwt.default;
 
@@ -16,17 +19,19 @@ export const loginHandler = async (request, reply) => {
     const user = await User.findOne({ email });
 
     if(user) {
+        if(user.isconfirmed === false) {
+            return reply.status(400).send({message: "Please activate you're account"  })
+        }
         const isPasswordCorrect = await compare(password, user.password);
-        if(isPasswordCorrect) {
+        if(isPasswordCorrect ) {
             console.log(sign)
-            const token = await sign({ email: user.email, id: user.id }, SECRET_WORD, {
+            const token = await sign({ email: user.email, id: user.id }, process.env.SECRET_WORD, {
                 expiresIn: '24h',
             });
             return reply.send({ id: user.id, message: `Welcome ${user.name}`, token})
                 .setCookie('token', token, { httpOnly: true });
         }}
     return reply.send({ message: 'Wrong email or password' });
-
 };
 
 // export const loginConfig = [

@@ -1,8 +1,10 @@
+import * as dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import * as jwt from 'jsonwebtoken';
-import { User } from "../register.mjs";
-import {SECRET_WORD} from "../../config/index.mjs";
+import { User } from "../auth/register.mjs";
+// import {SECRET_WORD} from "../../config/index.mjs";
 
+dotenv.config();
 
 const TaskSchema = new mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
@@ -36,7 +38,7 @@ export const taskHandler = async (request, reply) => {
 
     const { name, description, deadline, done } = request.body;
     const { token } = request.headers;
-    const { id } = await verify(token, SECRET_WORD);
+    const { id } = await verify(token, process.env.SECRET_WORD);
 
     const newTask = new Task({
         user: id,

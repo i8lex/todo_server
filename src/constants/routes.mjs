@@ -5,9 +5,16 @@ export const Routes = {
     register: '/register',
     image: '/image/:id',
     task: '/tasks/:id',
+    email: '/email/:code'
 };
 
 export const NotProtectedRoutes = {
+    email: {
+        unprefixed: Routes.email,
+        get prefixed() {
+            return `${ROUTE_PREFIX}${this.unprefixed}`;
+        },
+    },
     login: {
         unprefixed: Routes.login,
         get prefixed() {
