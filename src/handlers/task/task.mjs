@@ -8,7 +8,7 @@ dotenv.config();
 
 const TaskSchema = new mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    name: {
+    title: {
         type: String,
         required: [true, 'Name is required'],
         minlength: [4, 'Username must be at least 4 characters long'],
@@ -36,13 +36,13 @@ const { verify } = jwt.default;
  */
 export const taskHandler = async (request, reply) => {
 
-    const { name, description, deadline, done } = request.body;
+    const { title, description, deadline, done } = request.body;
     const { token } = request.headers;
     const { id } = await verify(token, process.env.SECRET_WORD);
 
     const newTask = new Task({
         user: id,
-        name: name,
+        title: title,
         done: done,
         description: description,
         deadline: deadline,
@@ -55,7 +55,7 @@ export const taskHandler = async (request, reply) => {
         console.log(err);
     }
 
-    return reply.status(200).send({ message: 'Task successful created' });
+    return reply.status(200).send({ message: 'Task successful created', newTask });
 };
 
 

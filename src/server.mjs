@@ -51,13 +51,13 @@ server.register(
         instance.post(Routes.login, loginHandler);
         instance.get(Routes.email, confirmEmailHandler);
 
-        instance.post(Routes.image, imageHandler);
+        instance.post(Routes.createImage, imageHandler);
         instance.get(Routes.image, getImageHandler);
         instance.delete(Routes.image, deleteImageHandler);
         instance.post(Routes.task, taskHandler);
         instance.get(Routes.task, getTaskHandler);
-        instance.put(Routes.task, updateTaskHandler);
-        instance.delete(Routes.task, deleteTaskHandler);
+        instance.put(Routes.changeTask, updateTaskHandler);
+        instance.delete(Routes.changeTask, deleteTaskHandler);
 
         // instance.post(...registerConfig);
         // instance.post(...loginConfig);

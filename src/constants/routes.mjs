@@ -4,8 +4,11 @@ export const Routes = {
     login: '/login',
     register: '/register',
     image: '/image/:id',
-    task: '/tasks/:id',
-    email: '/email/:code'
+    createImage: '/image',
+    task: '/tasks',
+    changeTask: '/tasks/:id',
+
+    email: '/email/:code',
 };
 
 export const NotProtectedRoutes = {
