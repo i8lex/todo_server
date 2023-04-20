@@ -9,7 +9,9 @@ export async function auth(request, reply) {
     if (NotProtectedRoutesList.includes(request.routerPath)) {
         return;
     }
-    const { token } = request.headers;
+    // const { token } = request.headers;
+    const authHeader = request.headers.authorization;
+    const token = authHeader ? authHeader.split(' ')[1] : null;
     try {
         const payload = await verify(token, process.env.SECRET_WORD);
 

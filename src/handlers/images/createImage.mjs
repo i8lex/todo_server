@@ -33,7 +33,8 @@ try {
  */
 export const imageHandler = async (request, reply) => {
     const { verify } = jwt.default;
-    const { token } = request.headers;
+    const authHeader = request.headers.authorization;
+    const token = authHeader ? authHeader.split(' ')[1] : null;
     const { id, email } = await verify(token, process.env.SECRET_WORD);
     const files = await request.body.files
 

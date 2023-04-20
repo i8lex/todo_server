@@ -9,7 +9,8 @@ dotenv.config();
 const { verify } = jwt.default;
 
 export const getImageHandler = async (request, reply) => {
-    const { token } = request.headers;
+    const authHeader = request.headers.authorization;
+    const token = authHeader ? authHeader.split(' ')[1] : null;
     const { id } = await verify(token, process.env.SECRET_WORD);
     const { id: imageId } = request.params;
     console.log(imageId)

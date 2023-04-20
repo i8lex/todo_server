@@ -14,7 +14,8 @@ const { verify } = jwt.default;
  * @return {Promise<void>}
  */
 export const deleteTaskHandler = async (request, reply) => {
-    const { token } = request.headers;
+    const authHeader = request.headers.authorization;
+    const token = authHeader ? authHeader.split(' ')[1] : null;
     const { userId } = await verify(token, process.env.SECRET_WORD);
     const { ids } = request.query;
     console.log(ids)
