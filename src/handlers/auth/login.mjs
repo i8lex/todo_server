@@ -1,6 +1,6 @@
-import { compare } from 'bcrypt';
-import * as dotenv from 'dotenv';
-import * as jwt from 'jsonwebtoken';
+import { compare } from "bcrypt";
+import * as dotenv from "dotenv";
+import * as jwt from "jsonwebtoken";
 import { User } from "./register.mjs";
 // import { SECRET_WORD } from "../../config/index.mjs";
 
@@ -14,24 +14,41 @@ const { sign } = jwt.default;
  * @return {Promise<void>}
  */
 export const loginHandler = async (request, reply) => {
-    const { email, password } = request.body;
+  const { email, password } = request.body;
+  const user = await User.findOne({ email });
 
-    const user = await User.findOne({ email });
+  console.log(!!user);
 
-    if(user) {
-        if(user.isconfirmed === false) {
-            return reply.status(400).send({message: "Please activate you're account"  })
-        }
-        const isPasswordCorrect = await compare(password, user.password);
-        if(isPasswordCorrect ) {
-            console.log(sign)
-            const token = await sign({ email: user.email, id: user.id }, process.env.SECRET_WORD, {
-                expiresIn: '24h',
-            });
-            return reply.send({ id: user.id, message: `Welcome ${user.name}`, token})
-                .setCookie('token', token, { httpOnly: true });
-        }}
-    return reply.send({ message: 'Wrong email or password' });
+  if (!user) {
+    return reply.status(200).send({ message: "Wrong email or password" });
+  } else {
+    const isPasswordCorrect = await compare(password, user.password);
+
+    if (isPasswordCorrect) {
+      if (!user.isconfirmed) {
+        return reply
+          .status(200)
+          .send({ message: "Please activate you're account" });
+      } else {
+        const token = await sign(
+          { email: user.email, id: user.id },
+          process.env.SECRET_WORD,
+          {
+            expiresIn: "24h",
+          }
+        );
+        return reply.status(200).send({
+          id: user.id,
+          message: `Welcome ${user.name}`,
+          token,
+        });
+      }
+    }
+  }
+
+  return reply
+    .status(200)
+    .send({ message: "Wrong email or password", status: "401" });
 };
 
 // export const loginConfig = [
