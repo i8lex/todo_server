@@ -20,7 +20,7 @@ export const loginHandler = async (request, reply) => {
   console.log(!!user);
 
   if (!user) {
-    return reply.status(200).send({ message: "Wrong email or password" });
+    return reply.status(203).send({ message: "Wrong email or password" });
   } else {
     const isPasswordCorrect = await compare(password, user.password);
 
@@ -28,7 +28,10 @@ export const loginHandler = async (request, reply) => {
       if (!user.isconfirmed) {
         return reply
           .status(200)
-          .send({ message: "Please activate you're account" });
+          .send({
+            message: "Please activate you're account",
+            confirmed: user.isconfirmed,
+          });
       } else {
         const token = await sign(
           { email: user.email, id: user.id },
@@ -46,9 +49,7 @@ export const loginHandler = async (request, reply) => {
     }
   }
 
-  return reply
-    .status(200)
-    .send({ message: "Wrong email or password", status: "401" });
+  return reply.status(200).send({ message: "Wrong email or password" });
 };
 
 // export const loginConfig = [
