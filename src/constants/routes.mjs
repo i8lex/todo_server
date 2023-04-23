@@ -2,7 +2,7 @@ export const ROUTE_PREFIX = '/api';
 
 export const Routes = {
     login: '/login',
-    register: '/register',
+    register: '/registration',
     image: '/image/:id',
     createImage: '/image',
     task: '/tasks',
