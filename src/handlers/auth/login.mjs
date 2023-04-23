@@ -26,12 +26,10 @@ export const loginHandler = async (request, reply) => {
 
     if (isPasswordCorrect) {
       if (!user.isconfirmed) {
-        return reply
-          .status(200)
-          .send({
-            message: "Please activate you're account",
-            confirmed: user.isconfirmed,
-          });
+        return reply.status(200).send({
+          message: "Please activate you're account",
+          confirmed: user.isconfirmed,
+        });
       } else {
         const token = await sign(
           { email: user.email, id: user.id },
@@ -43,6 +41,7 @@ export const loginHandler = async (request, reply) => {
         return reply.status(200).send({
           id: user.id,
           message: `Welcome ${user.name}`,
+          confirmed: user.isconfirmed,
           token,
         });
       }

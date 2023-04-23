@@ -19,7 +19,7 @@ export const repeatConfirmEmailHandler = async (request, reply) => {
   const template = Handlebars.compile(source);
 
   try {
-    const data = { url: `http://localhost:3001/api/email/?confirm=${token}` };
+    const data = { url: `http://localhost:3000/email/?confirm=${token}` };
     const html = template(data);
 
     await transporter.sendMail({
