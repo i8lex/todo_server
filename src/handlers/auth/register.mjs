@@ -59,20 +59,20 @@ export const registerHandler = async (request, reply) => {
   const existingName = await User.findOne({ name });
 
   if (existingName) {
-    return reply.status(200).send({
-      message: "User with this name already exists",
+    return reply.status(400).send({
+      error: "User with this name already exists",
       field: "name",
     });
   }
   if (existingEmail) {
-    return reply.status(200).send({
-      message: "User with this email already exists",
+    return reply.status(400).send({
+      error: "User with this email already exists",
       field: "email",
     });
   }
   if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/.test(password)) {
-    return reply.status(200).send({
-      message:
+    return reply.status(400).send({
+      error:
         "Password must contain at least one lowercase letter, one uppercase letter, one number and must be at least 8 characters long",
       field: "password",
     });
