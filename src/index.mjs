@@ -8,7 +8,7 @@ db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", function () {
   server.listen(
     {
-      port: process.env.PORT,
+      port: process.env.PORT || 3001,
       host: "localhost",
     },
     () => {
