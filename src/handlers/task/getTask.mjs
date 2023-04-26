@@ -14,11 +14,8 @@ const { verify } = jwt.default;
 export const getTaskHandler = async (request, reply) => {
   const authHeader = request.headers.authorization;
   const token = authHeader ? authHeader.split(" ")[1] : null;
-
-  console.log(request.headers.authorization);
   const { id } = await verify(token, process.env.SECRET_WORD);
   const { query } = request;
-  console.log(!Object.keys(query));
 
   try {
     let tasks;
