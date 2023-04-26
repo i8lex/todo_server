@@ -8,8 +8,8 @@ db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", function () {
   server.listen(
     {
-      port: process.env.PORT || 3002,
-      host: "localhost",
+      port: process.env.PORT || 3001,
+      host: "https://todoapitest.herokuapp.com/",
     },
     () => {
       console.log(`Server is running`);
