@@ -17,7 +17,6 @@ export const loginHandler = async (request, reply) => {
   const { email, password } = request.body;
   const user = await User.findOne({ email });
 
-  console.log(!!user);
 
   if (!user) {
     return reply.status(401).send({ error: "Wrong email or password" });
