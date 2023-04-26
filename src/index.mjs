@@ -9,7 +9,7 @@ db.once("open", function () {
   server.listen(
     {
       port: process.env.PORT || 3001,
-      host: "https://todoapitest.herokuapp.com/",
+      host: "0.0.0.0",
     },
     () => {
       console.log(`Server is running`);
