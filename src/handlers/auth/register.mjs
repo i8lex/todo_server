@@ -4,7 +4,6 @@ import mongoose from "mongoose";
 import { transporter } from "../../config/index.mjs";
 import Handlebars from "handlebars";
 import * as jwt from "jsonwebtoken";
-// import { SECRET_WORD } from "../../config/index.mjs";
 
 dotenv.config();
 

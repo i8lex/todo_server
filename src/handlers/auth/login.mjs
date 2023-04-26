@@ -2,7 +2,6 @@ import { compare } from "bcrypt";
 import * as dotenv from "dotenv";
 import * as jwt from "jsonwebtoken";
 import { User } from "./register.mjs";
-// import { SECRET_WORD } from "../../config/index.mjs";
 
 dotenv.config();
 
