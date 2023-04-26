@@ -1,32 +1,31 @@
-import * as dotenv from 'dotenv';
-import mongoose from 'mongoose';
-import * as jwt from 'jsonwebtoken';
+import * as dotenv from "dotenv";
+import mongoose from "mongoose";
+import * as jwt from "jsonwebtoken";
 import { User } from "../auth/register.mjs";
-// import {SECRET_WORD} from "../../config/index.mjs";
 
 dotenv.config();
 
 const TaskSchema = new mongoose.Schema({
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    title: {
-        type: String,
-        required: [true, 'Name is required'],
-        minlength: [4, 'Username must be at least 4 characters long'],
-        maxlength: [20, 'Username must be at max 20 characters long'],
-    },
-    description: {
-        type: String,
-        maxlength: [500, 'Task description must be at max 500 characters long'],
-    },
-    done: {
-        type: Boolean,
-        default: false,
-    },
-    created: { type: Date, default: Date.now },
-    deadline: { type: Date },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  title: {
+    type: String,
+    required: [true, "Name is required"],
+    minlength: [4, "Username must be at least 4 characters long"],
+    maxlength: [20, "Username must be at max 20 characters long"],
+  },
+  description: {
+    type: String,
+    maxlength: [500, "Task description must be at max 500 characters long"],
+  },
+  done: {
+    type: Boolean,
+    default: false,
+  },
+  created: { type: Date, default: Date.now },
+  deadline: { type: Date },
 });
 
-export const Task = mongoose.model('Task', TaskSchema);
+export const Task = mongoose.model("Task", TaskSchema);
 const { verify } = jwt.default;
 
 /**
@@ -35,32 +34,29 @@ const { verify } = jwt.default;
  * @return {Promise<void>}
  */
 export const taskHandler = async (request, reply) => {
+  const { title, description, deadline, done } = request.body;
+  const authHeader = request.headers.authorization;
+  const token = authHeader ? authHeader.split(" ")[1] : null;
+  const { id } = await verify(token, process.env.SECRET_WORD);
 
-    const { title, description, deadline, done } = request.body;
-    const authHeader = request.headers.authorization;
-    const token = authHeader ? authHeader.split(' ')[1] : null;
-    const { id } = await verify(token, process.env.SECRET_WORD);
+  const newTask = new Task({
+    user: id,
+    title: title,
+    done: done,
+    description: description,
+    deadline: deadline,
+  });
 
-    const newTask = new Task({
-        user: id,
-        title: title,
-        done: done,
-        description: description,
-        deadline: deadline,
-    });
+  try {
+    await newTask.save();
+  } catch (err) {
+    console.log(err);
+  }
 
-    try {
-        await newTask.save();
-        console.log(users);
-    } catch (err) {
-        console.log(err);
-    }
-
-    return reply.status(200).send({ message: 'Task successful created', newTask });
+  return reply
+    .status(200)
+    .send({ message: "Task successful created", newTask });
 };
-
-
-
 
 // export const registerConfig = [
 //     Routes.register,

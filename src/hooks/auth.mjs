@@ -1,7 +1,5 @@
 import * as jwt from "jsonwebtoken";
-
 import { NotProtectedRoutesList } from "../constants/routes.mjs";
-// import { SECRET_WORD } from '../config/index.mjs';
 
 const { verify } = jwt.default;
 

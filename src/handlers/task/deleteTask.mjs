@@ -1,12 +1,10 @@
-import * as dotenv from 'dotenv';
-import * as jwt from 'jsonwebtoken';
-// import {SECRET_WORD} from "../../config/index.mjs";
-import { Task } from "./task.mjs"
+import * as dotenv from "dotenv";
+import * as jwt from "jsonwebtoken";
+import { Task } from "./task.mjs";
 
 dotenv.config();
 
 const { verify } = jwt.default;
-
 
 /**
  * @param {FastifyRequest} request
@@ -14,25 +12,27 @@ const { verify } = jwt.default;
  * @return {Promise<void>}
  */
 export const deleteTaskHandler = async (request, reply) => {
-    const authHeader = request.headers.authorization;
-    const token = authHeader ? authHeader.split(' ')[1] : null;
-    const { userId } = await verify(token, process.env.SECRET_WORD);
-    const { ids } = request.query;
-    console.log(ids)
+  const authHeader = request.headers.authorization;
+  const token = authHeader ? authHeader.split(" ")[1] : null;
+  const { userId } = await verify(token, process.env.SECRET_WORD);
+  const { ids } = request.query;
+  console.log(ids);
 
-    try {
-        if (Object.keys(ids.split(',')).length === 0) {
-           const tasks = await Task.find({ user: userId });
-            reply.send(tasks);
-        }
-
-        const deletedTasks = await Task.deleteMany({ _id: { $in: ids.split(',') } });
-        if (deletedTasks.deletedCount === 0) {
-            return reply.status(404).send('Task not found');
-        }
-
-        reply.send(deletedTasks);
-    } catch (err) {
-        reply.status(500).send(err);
+  try {
+    if (Object.keys(ids.split(",")).length === 0) {
+      const tasks = await Task.find({ user: userId });
+      reply.send(tasks);
     }
-}
+
+    const deletedTasks = await Task.deleteMany({
+      _id: { $in: ids.split(",") },
+    });
+    if (deletedTasks.deletedCount === 0) {
+      return reply.status(404).send("Task not found");
+    }
+
+    reply.send(deletedTasks);
+  } catch (err) {
+    reply.status(500).send(err);
+  }
+};
