@@ -4,7 +4,6 @@ import mongoose from "mongoose";
 import { transporter } from "../../config/index.mjs";
 import Handlebars from "handlebars";
 import * as jwt from "jsonwebtoken";
-// import { SECRET_WORD } from "../../config/index.mjs";
 
 dotenv.config();
 
@@ -79,15 +78,6 @@ export const registerHandler = async (request, reply) => {
   }
 
   const hashedPassword = await hash(password, 10);
-  // const transporter = nodemailer.createTransport({
-  //   host: "smtp.gmail.com",
-  //   port: 587,
-  //   secure: false,
-  //   auth: {
-  //     user: "authtodomail@gmail.com",
-  //     pass: process.env.GOOGLE_CONNECT,
-  //   },
-  // });
 
   const token = await sign({ email }, process.env.SECRET_WORD, {
     expiresIn: "15m",
