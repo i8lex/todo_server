@@ -15,8 +15,8 @@ export const getImageHandler = async (request, reply) => {
   console.log(imageId);
   try {
     const image = await Image.findOne({ _id: imageId, user: id });
-    console.log(image.mimetype);
-    console.log(image.path);
+    // console.log(image.mimetype);
+    // console.log(image.path);
     if (!image) {
       return reply.code(404).send({ message: "Image not found" });
     }
