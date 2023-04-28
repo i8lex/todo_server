@@ -4,6 +4,7 @@ export const Routes = {
   login: "/login",
   register: "/registration",
   image: "/image/:id",
+  images: "/thumbs/:id",
   createImage: "/image",
   task: "/tasks",
   changeTask: "/tasks/:id",

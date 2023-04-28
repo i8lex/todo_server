@@ -19,6 +19,7 @@ import { taskHandler } from "./handlers/task/task.mjs";
 import { getTaskHandler } from "./handlers/task/getTask.mjs";
 import { updateTaskHandler } from "./handlers/task/updateTask.mjs";
 import { deleteTaskHandler } from "./handlers/task/deleteTask.mjs";
+import { getThumbsHandler } from "./handlers/images/getThumbs.mjs";
 
 const server = fastify({
   logger: true,
@@ -53,6 +54,8 @@ server.register(
 
     instance.post(Routes.createImage, imageHandler);
     instance.get(Routes.image, getImageHandler);
+    instance.get(Routes.images, getThumbsHandler);
+
     instance.delete(Routes.image, deleteImageHandler);
     instance.post(Routes.task, taskHandler);
     instance.get(Routes.task, getTaskHandler);
