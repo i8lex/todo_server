@@ -15,11 +15,11 @@ export const updateTaskHandler = async (request, reply) => {
   const authHeader = request.headers.authorization;
   const token = authHeader ? authHeader.split(" ")[1] : null;
   const { id } = await verify(token, process.env.SECRET_WORD);
-  const { id: tokenId } = request.params;
+  const { id: taskId } = request.params;
   const updates = request.body;
   try {
     const updatedTask = await Task.updateOne(
-      { _id: tokenId, user: id },
+      { _id: taskId, user: id },
       { $set: updates }
     );
 

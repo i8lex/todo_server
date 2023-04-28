@@ -17,6 +17,7 @@ const TaskSchema = new mongoose.Schema({
     type: String,
     maxlength: [500, "Task description must be at max 500 characters long"],
   },
+  images: Array,
   done: {
     type: Boolean,
     default: false,
@@ -38,10 +39,12 @@ export const taskHandler = async (request, reply) => {
   const authHeader = request.headers.authorization;
   const token = authHeader ? authHeader.split(" ")[1] : null;
   const { id } = await verify(token, process.env.SECRET_WORD);
+  const images = []
 
   const newTask = new Task({
     user: id,
     title: title,
+    images: images,
     done: done,
     description: description,
     deadline: deadline,
