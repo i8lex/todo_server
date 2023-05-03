@@ -1,3 +1,5 @@
 .idea
 /node_modules/
 .env
+!/docker-compose.yml
+uploads/64457fe446ea7a424c24b835/

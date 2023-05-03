@@ -1,10 +1,11 @@
-import { compare } from "bcrypt";
+import pkg from "bcryptjs";
 import * as dotenv from "dotenv";
 import * as jwt from "jsonwebtoken";
 import { User } from "./register.mjs";
 
 dotenv.config();
 
+const { compare } = pkg;
 const { sign } = jwt.default;
 
 /**

@@ -1,4 +1,4 @@
-import { hash } from "bcrypt";
+import pkg from "bcryptjs";
 import * as dotenv from "dotenv";
 import mongoose from "mongoose";
 import { transporter } from "../../config/index.mjs";
@@ -6,7 +6,7 @@ import Handlebars from "handlebars";
 import * as jwt from "jsonwebtoken";
 
 dotenv.config();
-
+const { hash } = pkg;
 const { sign } = jwt.default;
 
 const UserSchema = new mongoose.Schema({
