@@ -25,9 +25,10 @@ export const getImageHandler = async (request, reply) => {
     // console.log(data)                         // upload from server
     // reply.type(image.mimetype).send(data);    //
 
-    const { data, mimetype } = image.file;
+    const { image: data, mimetype, filename } = image;
     reply.header("Content-Type", mimetype);
-    reply.send(Buffer.from(data.buffer));
+    reply.header("Content-Disposition", `attachment; filename=${filename}`);
+    reply.send(Buffer.from(data));
   } catch (err) {
     console.log(err);
     reply.code(500).send({ message: "Server error" });

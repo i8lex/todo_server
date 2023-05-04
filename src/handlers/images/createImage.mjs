@@ -99,7 +99,7 @@ export const imageHandler = async (request, reply) => {
         filename: image.filename,
         mimetype: image.mimetype,
         size: image.data.length,
-        image: image,
+        image: image.data,
         path: imageSaveTo,
       });
 
