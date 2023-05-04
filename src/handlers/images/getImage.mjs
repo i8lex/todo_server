@@ -26,8 +26,10 @@ export const getImageHandler = async (request, reply) => {
     // reply.type(image.mimetype).send(data);    //
 
     // const { image: data, mimetype, filename } = image;
+    // console.log(Buffer.from(data));
     // reply.header("Content-Type", mimetype);
     // reply.header("Content-Disposition", `attachment; filename=${filename}`);
+    // reply.send(Buffer.from(data.buffer));
     reply.send(image);
   } catch (err) {
     console.log(err);
