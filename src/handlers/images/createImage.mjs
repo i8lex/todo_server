@@ -59,8 +59,8 @@ export const imageHandler = async (request, reply) => {
     const authHeader = request.headers.authorization;
     const token = authHeader ? authHeader.split(" ")[1] : null;
     const { id, email } = await verify(token, process.env.SECRET_WORD);
-    const { files, task } = await request.body;
-
+    const { images: files, task } = await request.body;
+    console.log(files);
     const imagePath = `./uploads/${id}/orig/`;
     if (!fs.existsSync(imagePath)) {
       fs.mkdirSync(imagePath, { recursive: true });
