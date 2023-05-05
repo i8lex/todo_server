@@ -1,6 +1,7 @@
 import * as dotenv from "dotenv";
 import * as jwt from "jsonwebtoken";
 import { Task } from "./task.mjs";
+import { Image, Thumb } from "../images/createImage.mjs";
 
 dotenv.config();
 
@@ -27,6 +28,22 @@ export const deleteTaskHandler = async (request, reply) => {
     const deletedTasks = await Task.deleteMany({
       _id: { $in: ids.split(",") },
     });
+
+    const deletedImages = await Image.deleteMany({
+      task: { $in: ids.split(",") },
+    });
+
+    const deletedThumbs = await Thumb.deleteMany({
+      task: { $in: ids.split(",") },
+    });
+
+    if (deletedImages.deletedCount === 0) {
+      console.log("Nothing");
+    }
+    if (deletedThumbs.deletedCount === 0) {
+      console.log("Nothing");
+    }
+
     if (deletedTasks.deletedCount === 0) {
       return reply.status(404).send("Task not found");
     }
