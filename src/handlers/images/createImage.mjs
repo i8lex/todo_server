@@ -87,7 +87,7 @@ export const imageHandler = async (request, reply) => {
       const Thumb = mongoose.model("Thumb", thumbSchema);
 
       const thumbBuffer = await sharp(image.data)
-        .resize(200, 200, { fit: "cover" })
+        .resize(100, 100, { fit: "cover" })
         .toBuffer();
 
       fs.writeFileSync(imageSaveTo, image.data);
