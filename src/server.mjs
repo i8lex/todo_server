@@ -55,8 +55,8 @@ server.register(
     instance.post(Routes.createImage, imageHandler);
     instance.get(Routes.image, getImageHandler);
     instance.get(Routes.images, getThumbsHandler);
-
     instance.delete(Routes.image, deleteImageHandler);
+
     instance.post(Routes.task, taskHandler);
     instance.get(Routes.task, getTaskHandler);
     instance.put(Routes.changeTask, updateTaskHandler);
