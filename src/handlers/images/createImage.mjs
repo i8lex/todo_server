@@ -122,7 +122,7 @@ export const imageHandler = async (request, reply) => {
         { $set: { thumb: addThumb._id } }
       );
 
-      images.push(`localhost:3001/api/image/${addThumb._id}`);
+      images.push(addImage._id);
     }
 
     await Task.updateOne({ _id: task }, { $set: { images: images } });
