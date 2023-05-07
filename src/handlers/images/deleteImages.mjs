@@ -1,6 +1,6 @@
 import * as dotenv from "dotenv";
 import * as jwt from "jsonwebtoken";
-import { Image } from "./createImage.mjs";
+import { Image, Thumb } from "./createImage.mjs";
 
 dotenv.config();
 
@@ -26,6 +26,9 @@ export const deleteImageHandler = async (request, reply) => {
 
     const deletedImages = await Image.deleteMany({
       _id: { $in: ids.split(",") },
+    });
+    const deletedThumbs = await Thumb.deleteMany({
+      image: { $in: ids.split(",") },
     });
     if (deletedImages.deletedCount === 0) {
       return reply.status(404).send("Images not found");

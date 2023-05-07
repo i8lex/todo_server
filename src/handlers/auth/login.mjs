@@ -42,6 +42,13 @@ export const loginHandler = async (request, reply) => {
           confirmed: user.isconfirmed,
           token,
         });
+        // .setCookie("my-cookie", "cookie-value", {
+        //   path: "/",
+        //   // httpOnly: true,
+        //   // secure: true,
+        //   // sameSite: 'strict',
+        //   maxAge: 60 * 60 * 24,
+        // });
       }
     }
   }
